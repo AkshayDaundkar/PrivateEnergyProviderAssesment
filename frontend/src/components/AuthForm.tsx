@@ -29,6 +29,7 @@ export default function AuthForm({ type }: AuthProps) {
         navigate("/login");
       }
     } catch (err: any) {
+      console.error(err);
       alert(err.response?.data?.detail || "Something went wrong");
     } finally {
       setLoading(false);

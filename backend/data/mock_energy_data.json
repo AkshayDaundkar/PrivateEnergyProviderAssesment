@@ -1,0 +1,34 @@
+[
+  {
+    "timestamp": "2025-04-04T00:00:00Z",
+    "type": "generation",
+    "source": "solar",
+    "value_kwh": 5.2,
+    "location": "rooftop",
+    "price_per_kwh": 0.12
+  },
+  {
+    "timestamp": "2025-04-04T00:00:00Z",
+    "type": "consumption",
+    "source": "residential",
+    "value_kwh": 6.7,
+    "location": "rooftop",
+    "price_per_kwh": 0.29
+  },
+  {
+    "timestamp": "2025-04-04T01:00:00Z",
+    "type": "generation",
+    "source": "wind",
+    "value_kwh": 3.8,
+    "location": "offshore",
+    "price_per_kwh": 0.15
+  },
+  {
+    "timestamp": "2025-04-04T01:00:00Z",
+    "type": "consumption",
+    "source": "commercial",
+    "value_kwh": 4.5,
+    "location": "offshore",
+    "price_per_kwh": 0.35
+  }
+]
