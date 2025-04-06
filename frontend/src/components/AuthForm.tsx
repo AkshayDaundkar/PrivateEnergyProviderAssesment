@@ -23,7 +23,7 @@ export default function AuthForm({ type }: AuthProps) {
       if (type === "login") {
         localStorage.setItem("token", res.data.access_token);
         alert("Login Successful 🎉");
-        // navigate("/dashboard");
+        navigate("/dashboard");
       } else {
         alert("Registered successfully! Login now ✨");
         navigate("/login");
