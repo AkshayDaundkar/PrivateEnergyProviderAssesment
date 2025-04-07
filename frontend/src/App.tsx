@@ -4,7 +4,7 @@ import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import GlobalEnergyDashboard from "./pages/GlobalEnergyDashboard";
-
+import ChatComponent from "./components/ChatComponent"
 function App() {
   return (
     <>
@@ -16,6 +16,7 @@ function App() {
           <Route path="/dashboard" element={<GlobalEnergyDashboard />} />
           <Route path="/login" element={<Login />} />
         </Routes>
+        <ChatComponent/>
         <Footer />
       </BrowserRouter>
     </>

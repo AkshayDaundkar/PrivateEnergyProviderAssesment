@@ -18,20 +18,13 @@ export default function Sidebar({ toggleTheme }: { toggleTheme: () => void }) {
   };
 
   return (
-    <aside className="bg-[#0f172a] text-white h-screen w-64 flex flex-col p-4 shadow-lg">
-      <h2 className="text-2xl font-bold mb-8">🔋 PEP Energy</h2>
+    <aside className="bg-[#0f172a] text-white max-h-full w-64 flex flex-col p-4 shadow-lg">
       <nav className="flex flex-col gap-4 text-lg">
-        <a href="#" className="flex items-center gap-2 hover:text-blue-400">
-          <FaHome /> Overview
-        </a>
         <a href="#" className="flex items-center gap-2 hover:text-blue-400">
           <FaChartLine /> Dashboard
         </a>
         <a href="#" className="flex items-center gap-2 hover:text-blue-400">
-          <FaDatabase /> Data
-        </a>
-        <a href="#" className="flex items-center gap-2 hover:text-blue-400">
-          <FaBrain /> AI Insights
+          <FaBrain /> ChatBot
         </a>
       </nav>
 

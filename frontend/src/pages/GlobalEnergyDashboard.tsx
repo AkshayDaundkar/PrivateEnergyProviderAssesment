@@ -4,7 +4,7 @@ import SummaryCard from "../components/Visualisations/SummaryCard";
 import { Line, Bar, Pie, Radar } from "react-chartjs-2";
 import { useState, useEffect, JSX } from "react";
 import "chart.js/auto";
-
+import WorldEnergyMapD3 from "./WorldEnergyBubbleMap";
 export default function GlobalEnergyDashboard() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any[]>([]);
@@ -325,6 +325,7 @@ Average: ${average("Total Energy Consumption (TWh)")} TWh.`
             )} USD/kWh.`
           )}
         </div>
+        <WorldEnergyMapD3 data={filteredData} />
       </main>
     </div>
   );
