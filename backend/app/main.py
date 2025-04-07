@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import auth,energy
+from app.routes import auth,energy,global_energy
 from app.db.database import users_collection
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,6 +10,8 @@ load_dotenv()
 app = FastAPI()
 app.include_router(auth.router)
 app.include_router(energy.router)
+app.include_router(global_energy.router)
+
 
 app.add_middleware(
     CORSMiddleware,
