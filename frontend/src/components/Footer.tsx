@@ -1,7 +1,8 @@
 export default function Footer() {
   return (
-    <footer className="bg-black bg-opacity-40 backdrop-blur-md text-center text-sm text-gray-300 py-4">
-      © 2025 Private Energy Partners. All rights reserved.
+    <footer className="bg-[#0f172a] text-white text-sm py-4 px-6 text-center">
+      © {new Date().getFullYear()} Private Energy Providers · All rights
+      reserved.
     </footer>
   );
 }

@@ -1,5 +1,4 @@
-// components/Visualisations/EnergyInsightChatbot.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { FiSend, FiMessageCircle, FiX } from "react-icons/fi";
 import ScrollToBottom from "react-scroll-to-bottom";
@@ -11,12 +10,30 @@ export default function ChatComponent() {
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+
+  // Load messages from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem("aichat");
+    if (stored) {
+      setMessages(JSON.parse(stored));
+      setInitialized(true);
+    }
+  }, []);
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem("aichat", JSON.stringify(messages));
+    }
+  }, [messages]);
 
   const handleSend = async () => {
     const trimmed = input.trim();
     if (!trimmed) return;
 
-    setMessages((prev) => [...prev, { sender: "user", text: trimmed }]);
+    const newMessages = [...messages, { sender: "user", text: trimmed }];
+    setMessages(newMessages);
     setInput("");
     setLoading(true);
 
@@ -39,19 +56,39 @@ export default function ChatComponent() {
     setLoading(false);
   };
 
+  const handleToggle = () => {
+    setOpen(!open);
+    if (!initialized) {
+      const welcome = [
+        {
+          sender: "ai",
+          text: `Hi there! I am your Data Representor from PEP 👋
+      
+      You can ask me any energy-related questions such as:
+      • What is the energy consumption of India in 2025?
+      • Show analysis for USA from 2020 to 2024
+      
+      I will provide insightful answers using advanced AI/ML models.`,
+        },
+      ];
+      setMessages(welcome);
+      setInitialized(true);
+    }
+  };
+
   return (
     <div>
       {/* Toggle Chatbot Button */}
       <button
         className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition"
-        onClick={() => setOpen(!open)}
+        onClick={handleToggle}
       >
         {open ? <FiX size={24} /> : <FiMessageCircle size={24} />}
       </button>
 
       {/* Chat Window */}
       {open && (
-        <div className="fixed bottom-20 right-6 w-96 max-w-full bg-white rounded-2xl shadow-xl border border-gray-300 flex flex-col overflow-hidden z-50">
+        <div className="fixed bottom-20 right-6 w-96 max-w-full h-108 bg-white rounded-2xl shadow-xl border border-gray-300 flex flex-col overflow-hidden z-50">
           <div className="bg-blue-600 text-white p-4 font-semibold">
             ⚡ Energy Insight Assistant
           </div>
@@ -64,7 +101,7 @@ export default function ChatComponent() {
                 }`}
               >
                 <div
-                  className={`inline-block px-3 py-2 rounded-xl max-w-[80%] ${
+                  className={`inline-block px-3 py-2 rounded-xl max-w-[80%] whitespace-pre-wrap ${
                     msg.sender === "user"
                       ? "bg-blue-200 ml-auto"
                       : "bg-green-200"

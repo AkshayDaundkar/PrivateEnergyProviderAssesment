@@ -52,8 +52,8 @@ export default function WorldEnergyMapD3({ data }: Props) {
     ]); // Blue → Yellow → Red
 
   return (
-    <div className="mt-10 bg-white rounded shadow p-6">
-      <h2 className="text-lg font-semibold mb-4">
+    <div className=" bg-white rounded shadow p-6">
+      <h2 className="text-lg font-semibold">
         🌐 Energy Consumption Bubble Map
       </h2>
 

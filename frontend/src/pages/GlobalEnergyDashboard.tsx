@@ -5,6 +5,8 @@ import { Line, Bar, Pie, Radar } from "react-chartjs-2";
 import { useState, useEffect, JSX } from "react";
 import "chart.js/auto";
 import WorldEnergyMapD3 from "./WorldEnergyBubbleMap";
+import ConsumptionVsGenerationChart from "../components/Visualisations/ConsumptionVsGenerationChart";
+
 export default function GlobalEnergyDashboard() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any[]>([]);
@@ -13,6 +15,7 @@ export default function GlobalEnergyDashboard() {
   const [country, setCountry] = useState("");
   const [year, setYear] = useState("");
   const [maxEnergy, setMaxEnergy] = useState<number | null>(null);
+  const [collapsed, setCollapsed] = useState(false);
 
   const monthsOrder = [
     "Jan",
@@ -106,7 +109,12 @@ export default function GlobalEnergyDashboard() {
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
-      <Sidebar toggleTheme={() => {}} />
+      <Sidebar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        toggleTheme={() => {}}
+      />
+
       <main className="flex-1 p-6 overflow-y-auto">
         <Header>
           <select
@@ -166,7 +174,7 @@ export default function GlobalEnergyDashboard() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-10">
           {chartWrapper(
             "Total Energy Consumption",
             <Bar
@@ -189,31 +197,6 @@ Lowest in ${summary("TWh").min} (${Math.min(
               ...groupedByMonth.map((d) => d.TWh)
             ).toFixed(2)} TWh), 
 Average: ${average("Total Energy Consumption (TWh)")} TWh.`
-          )}
-
-          {chartWrapper(
-            "Carbon Emissions",
-            <Bar
-              data={{
-                labels: groupedByMonth.map((d) => d.Month),
-                datasets: [
-                  {
-                    label: "CO₂ (Million Tons)",
-                    data: groupedByMonth.map((d) => d.Emissions),
-                    backgroundColor: "#ef4444",
-                  },
-                ],
-              }}
-            />,
-            `Total emissions: ${summary("Emissions").total} MTons. Highest in ${
-              summary("Emissions").max
-            } (${Math.max(...groupedByMonth.map((d) => d.Emissions)).toFixed(
-              2
-            )} MTons), Lowest in ${summary("Emissions").min} (${Math.min(
-              ...groupedByMonth.map((d) => d.Emissions)
-            ).toFixed(2)} MTons), Average: ${average(
-              "Carbon Emissions (Million Tons)"
-            )} MTons.`
           )}
 
           {chartWrapper(
@@ -245,6 +228,31 @@ Average: ${average("Total Energy Consumption (TWh)")} TWh.`
           )}
 
           {chartWrapper(
+            "Carbon Emissions",
+            <Bar
+              data={{
+                labels: groupedByMonth.map((d) => d.Month),
+                datasets: [
+                  {
+                    label: "CO₂ (Million Tons)",
+                    data: groupedByMonth.map((d) => d.Emissions),
+                    backgroundColor: "#ef4444",
+                  },
+                ],
+              }}
+            />,
+            `Total emissions: ${summary("Emissions").total} MTons. Highest in ${
+              summary("Emissions").max
+            } (${Math.max(...groupedByMonth.map((d) => d.Emissions)).toFixed(
+              2
+            )} MTons), Lowest in ${summary("Emissions").min} (${Math.min(
+              ...groupedByMonth.map((d) => d.Emissions)
+            ).toFixed(2)} MTons), Average: ${average(
+              "Carbon Emissions (Million Tons)"
+            )} MTons.`
+          )}
+
+          {chartWrapper(
             "Renewable vs Fossil Share",
             <Bar
               data={{
@@ -253,14 +261,25 @@ Average: ${average("Total Energy Consumption (TWh)")} TWh.`
                   {
                     label: "Renewable (%)",
                     data: groupedByMonth.map((d) => d.Renewable),
-                    backgroundColor: "#0ea5e9",
+                    backgroundColor: "rgba(14,165,233,0.6)", // blue-400
+                    borderColor: "#0284c7", // blue-600
+                    borderWidth: 1,
                   },
                   {
                     label: "Fossil (%)",
                     data: groupedByMonth.map((d) => d.Fossil),
-                    backgroundColor: "#f97316",
+                    backgroundColor: "rgba(249,115,22,0.6)", // orange-500
+                    borderColor: "#c2410c", // orange-700
+                    borderWidth: 1,
                   },
                 ],
+              }}
+              options={{
+                plugins: {
+                  legend: {
+                    labels: { color: "#374151" }, // text-slate-700
+                  },
+                },
               }}
             />,
             `Average renewable energy share: ${average(
@@ -272,60 +291,99 @@ Average: ${average("Total Energy Consumption (TWh)")} TWh.`
 
           {chartWrapper(
             "Energy Use Breakdown",
-            <Pie
-              data={{
-                labels: ["Industrial Use", "Household Use"],
-                datasets: [
-                  {
-                    label: "Use %",
-                    data: [
-                      average("Industrial Energy Use (%)"),
-                      average("Household Energy Use (%)"),
-                    ],
-                    backgroundColor: ["#6366f1", "#facc15"],
+            <div className="h-64 w-full">
+              <Pie
+                data={{
+                  labels: ["Industrial Use", "Household Use"],
+                  datasets: [
+                    {
+                      label: "Use %",
+                      data: [
+                        average("Industrial Energy Use (%)"),
+                        average("Household Energy Use (%)"),
+                      ],
+                      backgroundColor: ["#6366f1", "#facc15"], // indigo + yellow
+                      borderColor: ["#4f46e5", "#eab308"], // deeper accents
+                      borderWidth: 2,
+                    },
+                  ],
+                }}
+                options={{
+                  plugins: {
+                    legend: {
+                      labels: {
+                        color: "#374151",
+                        font: { size: 10 },
+                      },
+                      position: "bottom",
+                    },
                   },
-                ],
-              }}
-            />,
+                  maintainAspectRatio: false,
+                }}
+              />
+            </div>,
             `Average industrial energy use: ${average(
               "Industrial Energy Use (%)"
             )}%. Average household energy use: ${average(
               "Household Energy Use (%)"
             )}%.`
           )}
-
-          {chartWrapper(
-            "Price Index & Other KPIs",
-            <Radar
-              data={{
-                labels: ["Per Capita", "Emissions", "Fossil %", "Price"],
-                datasets: [
-                  {
-                    label: "Indicators",
-                    data: [
-                      average("Per Capita Energy Use (kWh)"),
-                      average("Carbon Emissions (Million Tons)"),
-                      average("Fossil Fuel Dependency (%)"),
-                      average("Energy Price Index (USD/kWh)"),
-                    ],
-                    borderColor: "#fbbf24",
-                    backgroundColor: "rgba(251,191,36,0.2)",
-                  },
-                ],
-              }}
-            />,
-            `Average per capita energy use: ${average(
-              "Per Capita Energy Use (kWh)"
-            )} kWh. Average emissions: ${average(
-              "Carbon Emissions (Million Tons)"
-            )} MTons. Average fossil fuel dependency: ${average(
-              "Fossil Fuel Dependency (%)"
-            )}%. Average energy price index: ${average(
-              "Energy Price Index (USD/kWh)"
-            )} USD/kWh.`
-          )}
+          <WorldEnergyMapD3 data={filteredData} />
         </div>
-        <WorldEnergyMapD3 data={filteredData} />
+        <div className="mt-10 flex flex-col lg:flex-row gap-6">
+          {/* Left 2/3: Chart */}
+          <div className="lg:w-2/3 w-full">
+            <ConsumptionVsGenerationChart
+              data={filteredData}
+              allCountries={allCountries}
+              allYears={allYears}
+            />
+          </div>
+
+          {/* Right 1/3: World Map */}
+          <div className="lg:w-1/3 w-full">
+            {chartWrapper(
+              "Price Index & Other KPIs",
+              <Radar
+                data={{
+                  labels: ["Per Capita", "Emissions", "Fossil %", "Price"],
+                  datasets: [
+                    {
+                      label: "Indicators",
+                      data: [
+                        average("Per Capita Energy Use (kWh)"),
+                        average("Carbon Emissions (Million Tons)"),
+                        average("Fossil Fuel Dependency (%)"),
+                        average("Energy Price Index (USD/kWh)"),
+                      ],
+                      borderColor: "#f59e0b", // amber-500
+                      backgroundColor: "rgba(251,191,36,0.3)", // amber-300
+                      pointBackgroundColor: "#facc15",
+                    },
+                  ],
+                }}
+                options={{
+                  scales: {
+                    r: {
+                      angleLines: { color: "#e5e7eb" },
+                      grid: { color: "#cbd5e1" },
+                      pointLabels: { color: "#475569" },
+                    },
+                  },
+                }}
+              />,
+              `Average per capita energy use: ${average(
+                "Per Capita Energy Use (kWh)"
+              )} kWh. Average emissions: ${average(
+                "Carbon Emissions (Million Tons)"
+              )} MTons. Average fossil fuel dependency: ${average(
+                "Fossil Fuel Dependency (%)"
+              )}%. Average energy price index: ${average(
+                "Energy Price Index (USD/kWh)"
+              )} USD/kWh.`
+            )}
+          </div>
+        </div>
       </main>
     </div>
   );
