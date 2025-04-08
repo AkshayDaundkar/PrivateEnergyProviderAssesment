@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
 import os
 
@@ -9,6 +9,6 @@ print(MONGO_URI)
 if not MONGO_URI:
     raise ValueError("MONGO_URI not found in environment variables")
 
-client = MongoClient(MONGO_URI)
+client = AsyncIOMotorClient(MONGO_URI)
 db = client["energy_app"]
 users_collection = db["users"]
