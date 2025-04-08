@@ -42,7 +42,7 @@ export default function ChatComponent() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/ai-insight",
+        "https://privateenergyproviderassesment.onrender.com/api/ai-insight",
         new URLSearchParams({ query: trimmed }),
         { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
       );

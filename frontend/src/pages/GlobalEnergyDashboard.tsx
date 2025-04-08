@@ -35,7 +35,9 @@ export default function GlobalEnergyDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("http://localhost:8000/energy/global");
+      const res = await fetch(
+        "https://privateenergyproviderassesment.onrender.com/energy/global"
+      );
       const json = await res.json();
       setData(json);
 
