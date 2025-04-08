@@ -16,9 +16,9 @@ export default function Sidebar({
 
   return (
     <div
-      className={`relative bg-[#0f172a] text-white shadow-md transition-all duration-300 flex flex-col h-full-screen ${
-        collapsed ? "w-20" : "w-64"
-      }`}
+      className={`relative bg-[#0f172a] text-white shadow-md transition-all duration-300 flex flex-col h-full-screen 
+  ${collapsed ? "w-20" : "w-64"} 
+  hidden sm:flex`} // <== Add "hidden sm:flex"
     >
       {/* Toggle */}
       <SidebarToggle
