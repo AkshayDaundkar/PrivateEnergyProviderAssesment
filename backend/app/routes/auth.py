@@ -1,9 +1,21 @@
+import os
 from fastapi import APIRouter, HTTPException
+from pymongo import MongoClient
 from app.db.database import users_collection
 from app.schemas import UserCreate, UserLogin, UserResponse
 from app.utils import hash_password, verify_password, create_access_token
 
 router = APIRouter()
+
+
+@router.get("/test-mongo")
+def test_mongo():
+    try:
+        client = MongoClient(os.getenv("MONGO_URI"), serverSelectionTimeoutMS=5000, tls=True)
+        dbs = client.list_database_names()
+        return {"status": "connected", "databases": dbs}
+    except Exception as e:
+        return {"status": "error", "details": str(e)}
 
 @router.post("/register", response_model=UserResponse)
 async def register(user: UserCreate):

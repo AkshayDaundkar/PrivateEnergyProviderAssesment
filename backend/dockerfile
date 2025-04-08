@@ -1,7 +1,9 @@
 # Use base image
 FROM python:3.11-slim
-RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
-# Set working directory
+RUN apt-get update && \
+    apt-get install -y gcc g++ libffi-dev libssl-dev curl ca-certificates && \
+    update-ca-certificates && \
+    apt-get clean# Set working directory
 WORKDIR /app
 
 # Copy code and install dependencies
