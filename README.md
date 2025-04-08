@@ -43,7 +43,7 @@ cd PrivateEnergyProviderAssesment
 
 ```bash
 cd frontend
-npm install
+npm install --force
 npm run dev
 ```
 
