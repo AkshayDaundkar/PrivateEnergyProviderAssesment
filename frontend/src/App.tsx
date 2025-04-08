@@ -8,7 +8,7 @@ import ChatComponent from "./components/ChatComponent";
 import { useAuth } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
 
-const PrivateRoute = ({ children }) => {
+const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   return user ? children : <Navigate to="/login" />;
 };

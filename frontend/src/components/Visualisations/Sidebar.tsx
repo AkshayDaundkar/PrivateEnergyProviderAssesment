@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaChartLine, FaBrain } from "react-icons/fa";
+import { FaChartLine } from "react-icons/fa";
 import SidebarToggle from "./SidebarToggle";
 
 export default function Sidebar({

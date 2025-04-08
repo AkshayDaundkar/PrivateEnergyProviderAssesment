@@ -30,7 +30,7 @@ type Props = {
 
 export default function WorldEnergyMapD3({ data }: Props) {
   // Aggregate by country
-  const totals: Record<string, number> = data.reduce((acc, cur) => {
+  const totals = data.reduce<Record<string, number>>((acc, cur) => {
     const country = cur.Country;
     acc[country] = (acc[country] || 0) + cur["Total Energy Consumption (TWh)"];
     return acc;
@@ -43,7 +43,7 @@ export default function WorldEnergyMapD3({ data }: Props) {
 
   const radiusScale = scaleSqrt().domain([0, maxVal]).range([2, 30]);
 
-  const colorScale = scaleLinear<string>()
+  const colorScale = scaleLinear()
     .domain([minVal, midVal, maxVal])
     .range([
       interpolateRdYlBu(1),
@@ -59,7 +59,7 @@ export default function WorldEnergyMapD3({ data }: Props) {
 
       <ComposableMap projection="geoEqualEarth" width={900} height={500}>
         <Geographies geography={worldGeo}>
-          {({ geographies }) =>
+          {({ geographies }: { geographies: any[] }) =>
             geographies.map((geo) => (
               <Geography
                 key={geo.rsmKey}

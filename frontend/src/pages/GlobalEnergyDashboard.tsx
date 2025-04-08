@@ -6,6 +6,7 @@ import { useState, useEffect, JSX } from "react";
 import "chart.js/auto";
 import WorldEnergyMapD3 from "./WorldEnergyBubbleMap";
 import ConsumptionVsGenerationChart from "../components/Visualisations/ConsumptionVsGenerationChart";
+import { ErrorBoundary } from "../ErrorBoundary";
 
 export default function GlobalEnergyDashboard() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -328,7 +329,9 @@ Average: ${average("Total Energy Consumption (TWh)")} TWh.`
               "Household Energy Use (%)"
             )}%.`
           )}
-          <WorldEnergyMapD3 data={filteredData} />
+          <ErrorBoundary>
+            <WorldEnergyMapD3 data={filteredData} />
+          </ErrorBoundary>
         </div>
         <div className="mt-10 flex flex-col lg:flex-row gap-6">
           {/* Left 2/3: Chart */}

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { FiSend, FiMessageCircle, FiX } from "react-icons/fi";
-import ScrollToBottom from "react-scroll-to-bottom";
 
+import ScrollToBottom from "react-scroll-to-bottom";
 type Message = { sender: "user" | "ai"; text: string };
 
 export default function ChatComponent() {
@@ -32,7 +32,10 @@ export default function ChatComponent() {
     const trimmed = input.trim();
     if (!trimmed) return;
 
-    const newMessages = [...messages, { sender: "user", text: trimmed }];
+    const newMessages: Message[] = [
+      ...messages,
+      { sender: "user", text: trimmed },
+    ];
     setMessages(newMessages);
     setInput("");
     setLoading(true);
@@ -59,7 +62,7 @@ export default function ChatComponent() {
   const handleToggle = () => {
     setOpen(!open);
     if (!initialized) {
-      const welcome = [
+      const welcome: Message[] = [
         {
           sender: "ai",
           text: `Hi there! I am your Data Representor from PEP 👋
