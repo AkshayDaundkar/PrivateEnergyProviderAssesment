@@ -33,9 +33,8 @@ async def register(user: UserCreate):
     }
 
     result = await users_collection.insert_one(new_user)
-    print("✅ Inserted ID:", result.inserted_id)
+    print(" Inserted ID:", result.inserted_id)
 
-    # ✅ Return full user info (you may want to mask hashed_password)
     return {
         "email": user.email,
         "firstName": user.firstName,
@@ -51,7 +50,6 @@ async def login(user: UserLogin):
     
     token = create_access_token({"sub": db_user["email"]})
 
-    # ✅ Include additional user info in the response
     return {
         "access_token": token,
         "token_type": "bearer",
