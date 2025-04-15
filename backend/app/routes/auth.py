@@ -2,8 +2,8 @@ import os
 from fastapi import APIRouter, HTTPException
 from pymongo import MongoClient
 from app.db.database import users_collection
-from app.schemas import UserCreate, UserLogin, UserResponse
-from app.utils import hash_password, verify_password, create_access_token
+from app.models.schemas import UserCreate, UserLogin, UserResponse
+from app.utils.utils import hash_password, verify_password, create_access_token
 
 router = APIRouter()
 
@@ -19,7 +19,7 @@ def test_mongo():
 
 @router.post("/register", response_model=UserResponse)
 async def register(user: UserCreate):
-    print("🔁 Checking if user exists...")
+    print("Checking if user exists...")
     
     existing = await users_collection.find_one({"email": user.email})
     if existing:

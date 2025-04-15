@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import auth,global_energy,ai_insights
+from app.routes import auth,global_energy,ai_insights,alerts
 from app.db.database import users_collection
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -11,6 +11,8 @@ app = FastAPI()
 app.include_router(auth.router)
 app.include_router(global_energy.router)
 app.include_router(ai_insights.router)
+app.include_router(alerts.router)
+
 
 
 
