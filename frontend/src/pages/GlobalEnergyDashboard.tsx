@@ -16,6 +16,8 @@ export default function GlobalEnergyDashboard() {
   const [country, setCountry] = useState("");
   const [year, setYear] = useState("");
   const [maxEnergy, setMaxEnergy] = useState<number | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [collapsed, setCollapsed] = useState(false);
 
   const monthsOrder = [
@@ -57,12 +59,23 @@ export default function GlobalEnergyDashboard() {
     fetchData();
   }, []);
 
-  const filteredData = data.filter(
-    (d) =>
-      (!country || d.Country === country) &&
-      (!year || d.Year === parseInt(year)) &&
-      (!maxEnergy || d["Total Energy Consumption (TWh)"] <= maxEnergy)
-  );
+  useEffect(() => {
+    if (startDate || endDate) setYear("");
+  }, [startDate, endDate]);
+
+  const filteredData = data.filter((d) => {
+    const withinCountry = !country || d.Country === country;
+    const withinYear = !year || d.Year === parseInt(year);
+    const withinMaxEnergy =
+      !maxEnergy || d["Total Energy Consumption (TWh)"] <= maxEnergy;
+
+    const withinStart = !startDate || new Date(d.date) >= new Date(startDate);
+    const withinEnd = !endDate || new Date(d.date) <= new Date(endDate);
+
+    return (
+      withinCountry && withinYear && withinMaxEnergy && withinStart && withinEnd
+    );
+  });
 
   const groupedByMonth = monthsOrder.map((month) => {
     const entries = filteredData.filter((d) => d.Month === month);
@@ -189,18 +202,40 @@ export default function GlobalEnergyDashboard() {
               </option>
             ))}
           </select>
-          <select
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
+
+          {!startDate && !endDate && (
+            <select
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              className="p-2 rounded border"
+            >
+              <option value="">All Years</option>
+              {allYears.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
+          )}
+
+          <input
+            type="date"
+            value={startDate ? startDate.toISOString().split("T")[0] : ""}
+            onChange={(e) =>
+              setStartDate(e.target.value ? new Date(e.target.value) : null)
+            }
             className="p-2 rounded border"
-          >
-            <option value="">All Years</option>
-            {allYears.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
+          />
+
+          <input
+            type="date"
+            value={endDate ? endDate.toISOString().split("T")[0] : ""}
+            onChange={(e) =>
+              setEndDate(e.target.value ? new Date(e.target.value) : null)
+            }
+            className="p-2 rounded border"
+          />
+
           <select
             value={maxEnergy ?? ""}
             onChange={(e) =>
