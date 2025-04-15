@@ -10,7 +10,7 @@ import { Toaster } from "react-hot-toast";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
-  return user ? children : <Navigate to="/login" />;
+  return user ? children : <Navigate to="/dashboard" />;
 };
 
 function App() {

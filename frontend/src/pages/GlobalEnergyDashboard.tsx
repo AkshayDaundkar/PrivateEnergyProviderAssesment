@@ -103,13 +103,69 @@ export default function GlobalEnergyDashboard() {
     title: string,
     chart: JSX.Element,
     summaryText: string
-  ) => (
-    <div className="bg-white rounded shadow p-4">
-      <h2 className="text-lg font-semibold mb-2">{title}</h2>
-      {chart}
-      <p className="text-sm text-gray-600 mt-2">{summaryText}</p>
-    </div>
-  );
+  ) => {
+    const id = title.toLowerCase().replace(/\s+/g, "-");
+    return (
+      <div
+        id={id}
+        className="relative bg-white rounded shadow p-4"
+        style={{ position: "relative" }}
+      >
+        <div className="flex justify-between items-start">
+          <h2 className="text-lg font-semibold">{title}</h2>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                const canvas = document.querySelector(
+                  `#${id} canvas`
+                ) as HTMLCanvasElement;
+                if (canvas) {
+                  const link = document.createElement("a");
+                  link.download = `${id}.png`;
+                  link.href = canvas.toDataURL("image/png");
+                  link.click();
+                }
+              }}
+              title="Download Chart"
+            >
+              <svg
+                className="w-4 h-4 text-gray-500 hover:text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
+              </svg>
+            </button>
+
+            <button
+              onClick={() => {
+                const chartDiv = document.getElementById(id);
+                if (chartDiv?.requestFullscreen) {
+                  chartDiv.requestFullscreen();
+                }
+              }}
+              title="Fullscreen Chart"
+            >
+              <svg
+                className="w-4 h-4 text-gray-500 hover:text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path d="M4 4h6M4 4v6M20 4h-6M20 4v6M4 20h6M4 20v-6M20 20h-6M20 20v-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {chart}
+        <p className="text-sm text-gray-600 mt-2">{summaryText}</p>
+      </div>
+    );
+  };
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
