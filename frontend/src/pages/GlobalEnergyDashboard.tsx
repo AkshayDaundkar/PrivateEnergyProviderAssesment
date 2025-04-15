@@ -35,9 +35,10 @@ export default function GlobalEnergyDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
-        "https://privateenergyproviderassesment.onrender.com/energy/global"
-      );
+      const baseURL = import.meta.env.VITE_API_BASE_URL;
+      console.log("BASE URL:", import.meta.env.VITE_API_BASE_URL);
+
+      const res = await fetch(`${baseURL}/energy/global`);
       const json = await res.json();
       setData(json);
 

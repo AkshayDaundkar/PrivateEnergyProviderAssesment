@@ -6,6 +6,8 @@ __pycache__/
 *.pyc
 *.so
 
+.env
+
 # Virtual environment
 venv/
 env/

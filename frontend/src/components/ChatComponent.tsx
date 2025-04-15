@@ -11,7 +11,6 @@ export default function ChatComponent() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [initialized, setInitialized] = useState(false);
-
   // Load messages from localStorage on mount
   useEffect(() => {
     const stored = localStorage.getItem("aichat");
@@ -41,8 +40,10 @@ export default function ChatComponent() {
     setLoading(true);
 
     try {
+      const baseURL = import.meta.env.VITE_API_BASE_URL;
+      await axios.get(`${baseURL}/generate-predictions`);
       const response = await axios.post(
-        "https://privateenergyproviderassesment.onrender.com/api/ai-insight",
+        `${baseURL}/ai-insight`,
         new URLSearchParams({ query: trimmed }),
         { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
       );
@@ -50,6 +51,7 @@ export default function ChatComponent() {
         ...prev,
         { sender: "ai", text: response.data.answer },
       ]);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setMessages((prev) => [
         ...prev,
