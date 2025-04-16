@@ -32,7 +32,7 @@ export default function AuthForm({ type }: AuthProps) {
       toast.error("Please enter a valid email address");
       return;
     }
-    if (!validatePassword(password)) {
+    if (type === "register" && !validatePassword(password)) {
       toast.error(
         "Password must be at least 8 characters and include uppercase, number, and symbol"
       );
@@ -56,10 +56,10 @@ export default function AuthForm({ type }: AuthProps) {
         login(userData);
         localStorage.setItem("token", res.data.access_token);
 
-        toast.success("🎉 Login Successful");
+        toast.success("Login Successful");
         navigate("/dashboard");
       } else {
-        toast.success("✨ Registered successfully! Login now.");
+        toast.success(" Registered successfully! Login now.");
         navigate("/login");
       }
     } catch (err: any) {
