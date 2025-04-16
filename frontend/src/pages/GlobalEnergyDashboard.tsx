@@ -9,6 +9,7 @@ import ConsumptionVsGenerationChart from "../components/Visualisations/Consumpti
 import { ErrorBoundary } from "../ErrorBoundary";
 import html2canvas from "html2canvas";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 export default function GlobalEnergyDashboard() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,6 +23,7 @@ export default function GlobalEnergyDashboard() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [collapsed, setCollapsed] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const { user } = useAuth(); // user = { email: "...", id: "..." }
 
   const monthsOrder = [
     "Jan",
@@ -195,8 +197,8 @@ export default function GlobalEnergyDashboard() {
 
     const formData = new FormData();
     formData.append("screenshot", blob, "dashboard.png");
-    formData.append("email", userEmail);
-    formData.append("userId", "demo-user"); // Replace with real user ID if available
+    formData.append("email", user.email); // pulled from your auth context or props
+    formData.append("userId", user.id || user._id); // or any unique user identifier
     formData.append("country", country);
     formData.append("startDate", startDate?.toISOString().split("T")[0] || "");
     formData.append("endDate", endDate?.toISOString().split("T")[0] || "");
@@ -280,13 +282,6 @@ export default function GlobalEnergyDashboard() {
               <option value="5000">Below 5,000 TWh</option>
               <option value="1000">Below 1,000 TWh</option>
             </select>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="p-2 rounded border"
-              value={userEmail}
-              onChange={(e) => setUserEmail(e.target.value)}
-            />
 
             <button
               className="bg-blue-600 text-white px-4 py-2 rounded"
