@@ -32,7 +32,7 @@ async def generate_predictions():
         if not required_cols.issubset(df.columns):
             return JSONResponse(status_code=400, content={"error": f"Required columns {required_cols} not found."})
 
-        # Group by Country and Year, aggregate by average (or use sum if needed)
+        # Group by Country and Year, aggregate by average 
         grouped = df.groupby(['Country', 'Year'], as_index=False)[["Total Energy Consumption (TWh)"]].mean()
 
         BASE_DIR.mkdir(parents=True, exist_ok=True)

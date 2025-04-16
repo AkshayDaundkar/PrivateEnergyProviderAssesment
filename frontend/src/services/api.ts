@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8000", // Or your FastAPI URL
+  baseURL: "http://localhost:8000",
 });
 
 export const registerUser = (data: any) => API.post("/register", data);

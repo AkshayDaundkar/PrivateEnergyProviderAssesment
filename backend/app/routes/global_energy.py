@@ -16,29 +16,6 @@ DATA_PATH = Path(__file__).resolve().parents[2] / "data" / "energy_consumption_g
 df = pd.read_csv(DATA_PATH)
 
 
-
-@router.get("/energy/global")
-def get_global_energy_data(
-    country: Optional[str] = Query(None),
-    year: Optional[int] = Query(None),
-    max_energy: Optional[float] = Query(None)
-):
-    filtered = df.copy()
-    if country:
-        filtered = filtered[filtered['Country'].str.lower() == country.lower()]
-    if year:
-        filtered = filtered[filtered['Year'] == year]
-    if max_energy:
-        filtered = filtered[filtered['Total Energy Consumption (TWh)'] <= max_energy]
-    return filtered.to_dict(orient="records")
-
-@router.get("/energy/global/filters")
-def get_filter_options():
-    countries = sorted(df['Country'].dropna().unique().tolist())
-    years = sorted(df['Year'].dropna().unique().astype(int).tolist())
-    return {"countries": countries, "years": years}
-
-
 @router.get("/energy/seed")
 async def seed_energy_data():
     csv_path = Path(__file__).resolve().parents[2] / "data" / "energy_consumption_generation.csv"
@@ -95,7 +72,7 @@ async def get_energy(
             date_obj = datetime.strptime(date, "%Y-%m-%d")
             query["date"] = {"$gte": date_obj, "$lt": date_obj.replace(hour=23, minute=59, second=59)}
         except ValueError:
-            pass  # skip invalid dates
+            pass  
 
     total = await energy_collection.count_documents(query)
     cursor = energy_collection.find(query).skip(skip).limit(limit)
@@ -145,6 +122,30 @@ async def delete_energy(id: str):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Record not found")
     return {"message": "Record deleted"}
+
+
+@router.get("/energy/global")
+def get_global_energy_data(
+    country: Optional[str] = Query(None),
+    year: Optional[int] = Query(None),
+    max_energy: Optional[float] = Query(None)
+):
+    filtered = df.copy()
+    if country:
+        filtered = filtered[filtered['Country'].str.lower() == country.lower()]
+    if year:
+        filtered = filtered[filtered['Year'] == year]
+    if max_energy:
+        filtered = filtered[filtered['Total Energy Consumption (TWh)'] <= max_energy]
+    return filtered.to_dict(orient="records")
+
+@router.get("/energy/global/filters")
+def get_filter_options():
+    countries = sorted(df['Country'].dropna().unique().tolist())
+    years = sorted(df['Year'].dropna().unique().astype(int).tolist())
+    return {"countries": countries, "years": years}
+
+
 
     result = energy_collection.delete_one({"_id": ObjectId(id)})
     if result.deleted_count == 0:

@@ -58,7 +58,6 @@ async def login(user: UserLogin):
         "lastName": db_user.get("lastName", ""),
     }
 
-#edit user
 
 @router.put("/edit-user")
 async def edit_user(user: UserUpdate):

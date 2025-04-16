@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Sidebar from "../components/Visualisations/Sidebar";
 import Header from "../components/Visualisations/Header";
 import SummaryCard from "../components/Visualisations/SummaryCard";
@@ -12,7 +13,6 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 
 export default function GlobalEnergyDashboard() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any[]>([]);
   const [allCountries, setAllCountries] = useState<string[]>([]);
   const [allYears, setAllYears] = useState<number[]>([]);
@@ -48,12 +48,9 @@ export default function GlobalEnergyDashboard() {
       setData(json);
 
       const countries = Array.from(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         new Set(json.map((d: any) => d.Country))
       ).sort() as string[];
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const years = Array.from(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         new Set(json.map((d: any) => d.Year)) as Set<number>
       ).sort((a, b) => a - b);
       setAllCountries(countries);
@@ -196,7 +193,7 @@ export default function GlobalEnergyDashboard() {
     const formData = new FormData();
     formData.append("screenshot", blob, "dashboard.png");
     if (user?.email) {
-      formData.append("email", user.email); // pulled from your auth context or props
+      formData.append("email", user.email);
     } else {
       alert("User email is not available.");
       return;
@@ -445,8 +442,8 @@ Average: ${average("Total Energy Consumption (TWh)")} TWh.`
                           average("Industrial Energy Use (%)"),
                           average("Household Energy Use (%)"),
                         ],
-                        backgroundColor: ["#6366f1", "#facc15"], // indigo + yellow
-                        borderColor: ["#4f46e5", "#eab308"], // deeper accents
+                        backgroundColor: ["#6366f1", "#facc15"],
+                        borderColor: ["#4f46e5", "#eab308"],
                         borderWidth: 2,
                       },
                     ],
@@ -501,8 +498,8 @@ Average: ${average("Total Energy Consumption (TWh)")} TWh.`
                           average("Fossil Fuel Dependency (%)"),
                           average("Energy Price Index (USD/kWh)"),
                         ],
-                        borderColor: "#f59e0b", // amber-500
-                        backgroundColor: "rgba(251,191,36,0.3)", // amber-300
+                        borderColor: "#f59e0b",
+                        backgroundColor: "rgba(251,191,36,0.3)",
                         pointBackgroundColor: "#facc15",
                       },
                     ],
