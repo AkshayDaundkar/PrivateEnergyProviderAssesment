@@ -5,7 +5,6 @@ import Sidebar from "../components/Visualisations/Sidebar";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function EnergyManager() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any[]>([]);
   const [form, setForm] = useState({
     country: "",
@@ -21,13 +20,27 @@ export default function EnergyManager() {
     source: "",
     date: "",
   });
+  const [debouncedFilters, setDebouncedFilters] = useState(filters); // For debounce
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
 
+  // Debounce logic
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedFilters(filters);
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timer);
+  }, [filters]);
+
   const fetchData = async () => {
     const res = await axios.get(`${API_BASE}/energy`, {
-      params: { page, limit: 50 },
+      params: {
+        page,
+        limit: 50,
+        ...debouncedFilters,
+      },
     });
     setData(res.data.records);
     setTotal(res.data.total);
@@ -35,14 +48,16 @@ export default function EnergyManager() {
 
   useEffect(() => {
     fetchData();
-  }, [page]);
+  }, [page, debouncedFilters]);
 
   const handleSubmit = async () => {
     const payload = { ...form, value_kwh: parseFloat(form.value_kwh) };
     if (editingId) {
       await axios.put(`${API_BASE}/energy/${editingId}`, payload);
+      alert("Record updated successfully!");
     } else {
       await axios.post(`${API_BASE}/energy`, payload);
+      alert("Record added successfully!");
     }
     setForm({
       country: "",
@@ -55,7 +70,6 @@ export default function EnergyManager() {
     fetchData();
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEdit = (item: any) => {
     setEditingId(item._id);
     setForm({
@@ -72,13 +86,7 @@ export default function EnergyManager() {
     }
   };
 
-  const filteredData = data.filter((row) =>
-    Object.entries(filters).every(
-      ([key, value]) =>
-        value === "" ||
-        row[key]?.toString().toLowerCase().includes(value.toLowerCase())
-    )
-  );
+  const totalPages = Math.ceil(total / 50);
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
@@ -92,6 +100,7 @@ export default function EnergyManager() {
           ⚡ Energy Data Manager
         </h2>
 
+        {/* Form */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded-lg shadow">
           <input
             className="input border px-3 py-2 rounded"
@@ -134,6 +143,7 @@ export default function EnergyManager() {
           </button>
         </div>
 
+        {/* Table */}
         <div className="overflow-x-auto bg-white rounded-lg shadow">
           <table className="w-full table-auto border">
             <thead className="bg-gray-100 text-sm text-gray-700">
@@ -164,7 +174,7 @@ export default function EnergyManager() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              {filteredData.map((row) => (
+              {data.map((row) => (
                 <tr key={row._id} className="border-t hover:bg-gray-50">
                   <td className="p-2">{row.country}</td>
                   <td className="p-2 capitalize">{row.type}</td>
@@ -187,7 +197,7 @@ export default function EnergyManager() {
                   </td>
                 </tr>
               ))}
-              {filteredData.length === 0 && (
+              {data.length === 0 && (
                 <tr>
                   <td colSpan={6} className="text-center py-4 text-gray-500">
                     No records found.
@@ -198,25 +208,38 @@ export default function EnergyManager() {
           </table>
         </div>
 
-        <div className="flex justify-between items-center mt-4">
+        {/* Pagination */}
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(1)}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          >
+            ⏮ First
+          </button>
           <button
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
-            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
           >
-            ⬅ Previous
+            ⬅ Prev
           </button>
-
-          <span className="text-gray-600 text-sm">
-            Page {page} of {Math.ceil(total / 50)}
+          <span className="text-sm text-gray-700">
+            Page {page} of {totalPages}
           </span>
-
           <button
-            disabled={page * 50 >= total}
+            disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
-            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
           >
             Next ➡
+          </button>
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage(totalPages)}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Last ⏭
           </button>
         </div>
       </div>

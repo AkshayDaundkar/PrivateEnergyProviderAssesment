@@ -71,14 +71,31 @@ async def seed_energy_data():
     return {"message": f"{len(records)} records inserted successfully."}
 
 
+
 @router.get("/energy")
-async def get_energy(country: str = None, type: str = None, page: int = 1, limit: int = 50):
+async def get_energy(
+    country: Optional[str] = None,
+    type: Optional[str] = None,
+    source: Optional[str] = None,
+    date: Optional[str] = None,
+    page: int = 1,
+    limit: int = 50
+):
     skip = (page - 1) * limit
     query = {}
+
     if country:
-        query["country"] = country
+        query["country"] = {"$regex": country, "$options": "i"}
     if type:
-        query["type"] = type
+        query["type"] = {"$regex": type, "$options": "i"}
+    if source:
+        query["source"] = {"$regex": source, "$options": "i"}
+    if date:
+        try:
+            date_obj = datetime.strptime(date, "%Y-%m-%d")
+            query["date"] = {"$gte": date_obj, "$lt": date_obj.replace(hour=23, minute=59, second=59)}
+        except ValueError:
+            pass  # skip invalid dates
 
     total = await energy_collection.count_documents(query)
     cursor = energy_collection.find(query).skip(skip).limit(limit)
@@ -86,7 +103,7 @@ async def get_energy(country: str = None, type: str = None, page: int = 1, limit
 
     for r in records:
         r["_id"] = str(r["_id"])
-        if "date" in r:
+        if "date" in r and isinstance(r["date"], datetime):
             r["date"] = r["date"].isoformat()
 
     return {
@@ -95,7 +112,6 @@ async def get_energy(country: str = None, type: str = None, page: int = 1, limit
         "limit": limit,
         "records": records
     }
-
 
 
 @router.post("/energy")
