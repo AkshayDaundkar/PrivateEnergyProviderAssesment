@@ -5,6 +5,7 @@ import Sidebar from "../components/Visualisations/Sidebar";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function EnergyManager() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any[]>([]);
   const [form, setForm] = useState({
     country: "",
@@ -70,6 +71,7 @@ export default function EnergyManager() {
     fetchData();
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEdit = (item: any) => {
     setEditingId(item._id);
     setForm({

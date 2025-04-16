@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "../services/api";
@@ -53,7 +54,6 @@ export default function AuthForm({ type }: AuthProps) {
           lastName: res.data.lastName || "",
         };
         login(userData);
-        localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("token", res.data.access_token);
 
         toast.success("🎉 Login Successful");

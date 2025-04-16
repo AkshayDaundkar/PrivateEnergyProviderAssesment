@@ -11,12 +11,24 @@ import EditUser from "./components/EditUserForm";
 import EnergyManager from "./pages/EnergyManager";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  if (loading)
+    return <div className="text-center mt-10 text-blue-700">Loading...</div>;
   return user ? children : <Navigate to="/login" />;
 };
 
 function App() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen space-y-4">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600 border-opacity-50"></div>
+        <p className="text-blue-700 text-sm font-medium">
+          Loading your dashboard...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
