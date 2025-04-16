@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from app.routes import auth,global_energy,ai_insights,alerts
-from app.db.database import users_collection
 from fastapi.middleware.cors import CORSMiddleware
 
 from dotenv import load_dotenv

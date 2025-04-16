@@ -1,7 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from pydantic import BaseModel
-from typing import Literal, Optional
-from datetime import datetime
+from typing import Optional
 
 class UserCreate(BaseModel):
     firstName: str
