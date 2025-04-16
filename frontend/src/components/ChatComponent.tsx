@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { FiSend, FiMessageCircle, FiX } from "react-icons/fi";
+import { FiSend, FiMessageCircle, FiX, FiTrash } from "react-icons/fi";
 
 import ScrollToBottom from "react-scroll-to-bottom";
 type Message = { sender: "user" | "ai"; text: string };
@@ -68,12 +68,11 @@ export default function ChatComponent() {
         {
           sender: "ai",
           text: `Hi there! I am your Data Representor from PEP 👋
-      
-      You can ask me any energy-related questions such as:
-      • What is the energy consumption of India in 2025?
-      • Show analysis for USA from 2020 to 2024
-      
-      I will provide insightful answers using advanced AI/ML models.`,
+            You can ask me any energy-related questions such as:
+            • What is the energy consumption of India in 2025?
+            • Show analysis for USA from 2020 to 2024
+            
+            I will provide insightful answers using advanced AI/ML models.`,
         },
       ];
       setMessages(welcome);
@@ -94,9 +93,20 @@ export default function ChatComponent() {
       {/* Chat Window */}
       {open && (
         <div className="fixed bottom-20 right-6 w-96 max-w-full h-108 bg-white rounded-2xl shadow-xl border border-gray-300 flex flex-col overflow-hidden z-50">
-          <div className="bg-blue-600 text-white p-4 font-semibold">
-            ⚡ Energy Insight Assistant
+          <div className="bg-blue-600 text-white p-4 font-semibold flex justify-between items-center">
+            <span>⚡ Energy Insight Assistant</span>
+            <button
+              className="text-sm underline text-white hover:text-red-300 ml-2"
+              onClick={() => {
+                localStorage.removeItem("aichat");
+                setMessages([]);
+                setInitialized(false);
+              }}
+            >
+              <FiTrash size={18} />
+            </button>
           </div>
+
           <ScrollToBottom className="flex-1 p-4 overflow-y-auto max-h-[400px] bg-gray-50">
             {messages.map((msg, i) => (
               <div

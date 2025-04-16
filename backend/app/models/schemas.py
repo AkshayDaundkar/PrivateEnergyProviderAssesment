@@ -24,13 +24,7 @@ class UserUpdate(BaseModel):
     lastName: Optional[str]
     email: Optional[EmailStr]
     currentPassword: str
-    newPassword: Optional[str] = None
+    newPassword: Optional[str]
 
 
-class EnergyRecord(BaseModel):
-    timestamp: datetime
-    type: Literal["generation", "consumption"]
-    source: str
-    value_kwh: float
-    location: str
-    price_per_kwh: float
+

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaChartLine } from "react-icons/fa";
+import { FaBolt, FaChartLine } from "react-icons/fa";
 import SidebarToggle from "./SidebarToggle";
 
 export default function Sidebar({
@@ -34,6 +34,13 @@ export default function Sidebar({
           >
             <FaChartLine className="text-xl" />
             {!collapsed && <span className="text-md">Dashboard</span>}
+          </Link>
+          <Link
+            to="/energy-manager"
+            className="flex items-center gap-3 hover:text-blue-400"
+          >
+            <FaBolt className="text-xl" />
+            {!collapsed && <span className="text-md">Energy Manager</span>}
           </Link>
         </div>
 

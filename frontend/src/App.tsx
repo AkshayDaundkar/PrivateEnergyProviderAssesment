@@ -8,6 +8,7 @@ import ChatComponent from "./components/ChatComponent";
 import { useAuth } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import EditUser from "./components/EditUserForm";
+import EnergyManager from "./pages/EnergyManager";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
@@ -32,6 +33,14 @@ function App() {
           element={
             <PrivateRoute>
               <GlobalEnergyDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/energy-manager"
+          element={
+            <PrivateRoute>
+              <EnergyManager />
             </PrivateRoute>
           }
         />

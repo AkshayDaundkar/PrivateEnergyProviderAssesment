@@ -24,7 +24,7 @@ export default function EditUserForm({ user }: { user: User }) {
         currentPassword,
         newPassword: showNewPassword ? newPassword : null,
       });
-      alert("✅ Profile updated successfully!");
+      alert(" Profile updated successfully!");
     } catch (err) {
       if (axios.isAxiosError(err)) {
         alert(err.response?.data?.detail || " Failed to update profile");
