@@ -7,6 +7,7 @@ import GlobalEnergyDashboard from "./pages/GlobalEnergyDashboard";
 import ChatComponent from "./components/ChatComponent";
 import { useAuth } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
+import EditUser from "./components/EditUserForm";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={<Register />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        {user && <Route path="/edit-user" element={<EditUser user={user} />} />}
         <Route
           path="/dashboard"
           element={

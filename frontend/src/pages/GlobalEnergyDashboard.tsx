@@ -22,7 +22,6 @@ export default function GlobalEnergyDashboard() {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [collapsed, setCollapsed] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
   const { user } = useAuth(); // user = { email: "...", id: "..." }
 
   const monthsOrder = [
@@ -43,7 +42,6 @@ export default function GlobalEnergyDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       const baseURL = import.meta.env.VITE_API_BASE_URL;
-      console.log("BASE URL:", import.meta.env.VITE_API_BASE_URL);
 
       const res = await fetch(`${baseURL}/energy/global`);
       const json = await res.json();
@@ -197,8 +195,13 @@ export default function GlobalEnergyDashboard() {
 
     const formData = new FormData();
     formData.append("screenshot", blob, "dashboard.png");
-    formData.append("email", user.email); // pulled from your auth context or props
-    formData.append("userId", user.id || user._id); // or any unique user identifier
+    if (user?.email) {
+      formData.append("email", user.email); // pulled from your auth context or props
+    } else {
+      alert("User email is not available.");
+      return;
+    }
+    formData.append("userId", user.email); // using email as a unique user identifier
     formData.append("country", country);
     formData.append("startDate", startDate?.toISOString().split("T")[0] || "");
     formData.append("endDate", endDate?.toISOString().split("T")[0] || "");

@@ -30,6 +30,10 @@ export default function Navbar() {
             <Link to="/dashboard" className="hover:text-blue-400 transition">
               Dashboard
             </Link>
+            <Link to="/edit-user" className="hover:text-blue-500">
+              Edit Profile
+            </Link>
+
             <button
               onClick={handleLogout}
               className="hover:text-red-400 transition"

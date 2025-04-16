@@ -4,13 +4,12 @@ from app.utils.email_utils import send_email_with_screenshot
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
+from app.db.database import alerts_collection
+
 
 load_dotenv()
 
 router = APIRouter()
-client = MongoClient(os.getenv("MONGO_URI"))
-db = client["pep"]
-alerts_collection = db["alerts"]
 
 @router.post("/alerts")
 async def save_alert(

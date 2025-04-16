@@ -2,7 +2,7 @@ import os
 from fastapi import APIRouter, HTTPException
 from pymongo import MongoClient
 from app.db.database import users_collection
-from app.models.schemas import UserCreate, UserLogin, UserResponse
+from app.models.schemas import UserCreate, UserLogin, UserResponse, UserUpdate
 from app.utils.utils import hash_password, verify_password, create_access_token
 
 router = APIRouter()
@@ -58,3 +58,23 @@ async def login(user: UserLogin):
         "lastName": db_user.get("lastName", ""),
     }
 
+#edit user
+
+@router.put("/edit-user")
+async def edit_user(user: UserUpdate):
+    db_user = await users_collection.find_one({"email": user.email})
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if not verify_password(user.currentPassword, db_user["hashed_password"]):
+        raise HTTPException(status_code=403, detail="Current password is incorrect")
+
+    updates = {}
+    if user.firstName: updates["firstName"] = user.firstName
+    if user.lastName: updates["lastName"] = user.lastName
+    if user.newPassword:
+        updates["hashed_password"] = hash_password(user.newPassword)
+
+    await users_collection.update_one({"email": user.email}, {"$set": updates})
+
+    return {"message": "User updated successfully"}

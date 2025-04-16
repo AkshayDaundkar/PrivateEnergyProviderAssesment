@@ -12,3 +12,4 @@ if not MONGO_URI:
 client = AsyncIOMotorClient(MONGO_URI)
 db = client["energy_app"]
 users_collection = db["users"]
+alerts_collection = db["alerts"]

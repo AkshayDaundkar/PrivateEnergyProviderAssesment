@@ -1,4 +1,7 @@
 from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
+from typing import Literal, Optional
+from datetime import datetime
 
 class UserCreate(BaseModel):
     firstName: str
@@ -16,9 +19,13 @@ class UserResponse(BaseModel):
     lastName: str
     email: EmailStr
 
-from pydantic import BaseModel
-from typing import Literal
-from datetime import datetime
+class UserUpdate(BaseModel):
+    firstName: Optional[str]
+    lastName: Optional[str]
+    email: Optional[EmailStr]
+    currentPassword: str
+    newPassword: Optional[str] = None
+
 
 class EnergyRecord(BaseModel):
     timestamp: datetime
